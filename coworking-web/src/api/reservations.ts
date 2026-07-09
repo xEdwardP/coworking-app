@@ -14,6 +14,10 @@ export function getMyReservations() {
   return api.get<Reservation[]>('/reservations/me').then((r) => r.data);
 }
 
+export function getAllReservations() {
+  return api.get<Reservation[]>('/reservations').then((r) => r.data);
+}
+
 export function updateReservationStatus(id: number, status: 'CONFIRMED' | 'CANCELLED') {
   return api.patch<Reservation>(`/reservations/${id}/status`, { status }).then((r) => r.data);
 }

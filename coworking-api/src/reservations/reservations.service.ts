@@ -59,7 +59,11 @@ export class ReservationsService {
   findMine(userId: number) {
     return this.prisma.reservation.findMany({
       where: { userId },
-      include: { space: true },
+      include: { 
+        space: {
+          include: { reviews: { where: { userId } } }
+        } 
+      },
     });
   }
 

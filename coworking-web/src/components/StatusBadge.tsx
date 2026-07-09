@@ -1,12 +1,13 @@
 import type { ReservationStatus } from '../types';
 
-export type DisplayStatus = ReservationStatus | 'FINISHED';
+export type DisplayStatus = ReservationStatus | 'FINISHED' | 'COMPLETED';
 
 const styles: Record<DisplayStatus, string> = {
   PENDING: 'bg-[#3b2e12] text-[#e4b044]',
   CONFIRMED: 'bg-[#19482f] text-[#62c891]',
   CANCELLED: 'bg-[#51281a] text-[#e46f4d]',
   FINISHED: 'bg-[#19482f] text-[#62c891]',
+  COMPLETED: 'bg-[#19482f] text-[#62c891]',
 };
 
 const labels: Record<DisplayStatus, string> = {
@@ -14,6 +15,7 @@ const labels: Record<DisplayStatus, string> = {
   CONFIRMED: 'CONFIRMADA',
   CANCELLED: 'CANCELADA',
   FINISHED: 'FINALIZADA',
+  COMPLETED: 'COMPLETADA',
 };
 
 export function getDisplayStatus(status: ReservationStatus, endTime: string): DisplayStatus {

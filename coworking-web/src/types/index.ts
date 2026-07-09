@@ -18,6 +18,7 @@ export interface Space {
   type: SpaceType;
   imageUrl?: string | null;
   status: boolean;
+  reviews?: Review[];
 }
 
 export interface Reservation {
@@ -29,6 +30,7 @@ export interface Reservation {
   status: ReservationStatus;
   reason?: string | null;
   space?: Space;
+  user?: User;
 }
 
 export interface Review {

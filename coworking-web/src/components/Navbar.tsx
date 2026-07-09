@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Bell, Building2, CalendarDays, Check, Heart, Search, User, X, Clock, Star, LogOut } from 'lucide-react';
+import { Bell, Building2, CalendarDays, Check, Heart, Search, User, X, Clock, Star, LogOut, Shield } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getMyReservations } from '../api/reservations';
 import { getMyFavorites } from '../api/favorites';
@@ -68,6 +68,10 @@ export function Navbar() {
     { to: '/mis-reservas', label: 'Mis reservas', icon: CalendarDays, count: reservationsCount },
     { to: '/favoritos', label: 'Favoritos', icon: Heart, count: favoritesCount },
   ];
+
+  if (user?.role === 'ADMIN') {
+    navItems.push({ to: '/admin/reservas', label: 'Administración', icon: Shield, count: undefined });
+  }
 
   return (
     <>

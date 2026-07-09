@@ -65,8 +65,9 @@ export default function MisReservasPage() {
         <div className="space-y-3">
           {reservations.map((reservation) => {
             const displayStatus = getDisplayStatus(reservation.status, reservation.endTime);
-            const canCancel = reservation.status === 'PENDING' || reservation.status === 'CONFIRMED';
-            const canReview = displayStatus === 'FINISHED';
+            const hasReview = reservation.space?.reviews && reservation.space.reviews.length > 0;
+            const canCancel = (reservation.status === 'PENDING' || reservation.status === 'CONFIRMED') && displayStatus !== 'FINISHED' && !hasReview;
+            const canReview = displayStatus === 'FINISHED' && !hasReview;
             const Icon = reservation.space?.type ? iconByType[reservation.space.type] : Building2;
 
             return (
@@ -86,7 +87,7 @@ export default function MisReservasPage() {
 
                 <div className="flex flex-wrap items-center justify-end gap-3">
                   <p className="min-w-[190px] text-sm font-mono font-extrabold text-[#aab0ab]">{formatDateRange(reservation)}</p>
-                  <StatusBadge status={displayStatus} />
+                  <StatusBadge status={hasReview ? 'COMPLETED' : displayStatus} />
                   {canCancel && (
                     <button
                       type="button"

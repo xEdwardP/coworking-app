@@ -10,6 +10,8 @@ import SpaceDetailPage from './pages/SpaceDetailPage';
 import MisReservasPage from './pages/MisReservasPage';
 import FavoritosPage from './pages/FavoritosPage';
 
+import AdminReservasPage from './pages/AdminReservasPage';
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -25,6 +27,7 @@ export default function App() {
               <Route path="/espacios/:id" element={<SpaceDetailPage />} />
               <Route path="/mis-reservas" element={<MisReservasPage />} />
               <Route path="/favoritos" element={<FavoritosPage />} />
+              <Route path="/admin/reservas" element={<AdminReservasPage />} />
             </Route>
           </Route>
 
