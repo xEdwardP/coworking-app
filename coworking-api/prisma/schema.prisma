@@ -21,6 +21,7 @@ model User {
   role         String        @default("USER")
   status       Boolean       @default(true)
   reservations Reservation[]
+  reviews Review[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -35,6 +36,7 @@ model Space {
   imageUrl     String?
   status       Boolean       @default(true)
   reservations Reservation[]
+  reviews Review[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -53,4 +55,18 @@ model Reservation {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  spaceId   Int
+  userId    Int
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  space Space @relation(fields: [spaceId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
+  @@unique([userId, spaceId])
 }

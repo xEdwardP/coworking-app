@@ -7,6 +7,9 @@ import { UsersModule } from './users/users.module';
 import { SpacesModule } from './spaces/spaces.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { ReviewsService } from './reviews/reviews.service';
+import { ReviewsController } from './reviews/reviews.controller';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -16,8 +19,9 @@ import { PrismaModule } from './prisma/prisma.module';
     SpacesModule,
     ReservationsModule,
     PrismaModule,
+    ReviewsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, ReviewsController],
+  providers: [AppService, ReviewsService],
 })
 export class AppModule {}
