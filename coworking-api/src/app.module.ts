@@ -10,6 +10,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ReviewsService } from './reviews/reviews.service';
 import { ReviewsController } from './reviews/reviews.controller';
 import { ReviewsModule } from './reviews/reviews.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     ReservationsModule,
     PrismaModule,
     ReviewsModule,
+    FavoritesModule,
   ],
   controllers: [AppController, ReviewsController],
   providers: [AppService, ReviewsService],
