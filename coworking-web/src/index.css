@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #171717;
+  --color-brand-foreground: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f6f6f4;
+  --color-border-subtle: #e7e5e4;
+}
+
+body {
+  @apply bg-[var(--color-surface-muted)] text-neutral-900 antialiased;
+}
