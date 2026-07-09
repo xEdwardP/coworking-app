@@ -1,13 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Bell, Building2, CalendarDays, Check, Heart, Search, User, X, Clock, Star } from 'lucide-react';
+import { Bell, Building2, CalendarDays, Check, Heart, Search, User, X, Clock, Star, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-
-const navItems = [
-  { to: '/explorar', label: 'Explorar', icon: Search, count: undefined },
-  { to: '/mis-reservas', label: 'Mis reservas', icon: CalendarDays, count: 5 },
-  { to: '/favoritos', label: 'Favoritos', icon: Heart, count: 3 },
-];
+import { getMyReservations } from '../api/reservations';
+import { getMyFavorites } from '../api/favorites';
 
 const notifications = [
   {
@@ -37,20 +33,41 @@ const notifications = [
 ];
 
 export function Navbar() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [reservationsCount, setReservationsCount] = useState<number | undefined>(undefined);
+  const [favoritesCount, setFavoritesCount] = useState<number | undefined>(undefined);
+  
   const panelRef = useRef<HTMLDivElement | null>(null);
+  const userMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      getMyReservations().then(res => setReservationsCount(res.length)).catch(() => {});
+      getMyFavorites().then(favs => setFavoritesCount(favs.length)).catch(() => {});
+    }
+  }, [user]);
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
         setNotificationsOpen(false);
       }
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
     }
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, []);
+
+  const navItems = [
+    { to: '/explorar', label: 'Explorar', icon: Search, count: undefined },
+    { to: '/mis-reservas', label: 'Mis reservas', icon: CalendarDays, count: reservationsCount },
+    { to: '/favoritos', label: 'Favoritos', icon: Heart, count: favoritesCount },
+  ];
 
   return (
     <>
@@ -128,13 +145,32 @@ export function Navbar() {
                 3
               </span>
             </button>
-            <button
-              type="button"
-              aria-label="Perfil"
-              className="grid h-10 w-10 place-items-center rounded-lg border border-[#30363d] bg-[#171b1f] text-[#aab0ab] transition hover:text-white"
-            >
-              <User size={18} />
-            </button>
+            <div ref={userMenuRef} className="relative">
+              <button
+                type="button"
+                aria-label="Perfil"
+                onClick={() => setUserMenuOpen((value) => !value)}
+                className="grid h-10 w-10 place-items-center rounded-lg border border-[#30363d] bg-[#171b1f] text-[#aab0ab] transition hover:text-white"
+              >
+                <User size={18} />
+              </button>
+
+              {userMenuOpen && (
+                <div className="absolute right-0 top-12 w-48 rounded-xl border border-[#2f353b] bg-[#1a1e22] p-2 shadow-2xl">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      signOut();
+                      navigate('/login');
+                    }}
+                    className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold text-[#e16044] transition hover:bg-[#51281a]"
+                  >
+                    <LogOut size={16} />
+                    Cerrar sesión
+                  </button>
+                </div>
+              )}
+            </div>
 
             {notificationsOpen && (
               <div className="absolute right-0 top-12 w-[340px] rounded-xl border border-[#2f353b] bg-[#1a1e22] p-4 shadow-2xl">
