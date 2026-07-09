@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { SpacesService } from './spaces.service';
@@ -50,5 +51,13 @@ export class SpacesController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.spacesService.remove(id);
+  }
+
+  @Get(':id/availability')
+  getAvailability(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('date') date: string,
+  ) {
+    return this.spacesService.getAvailability(id, date);
   }
 }

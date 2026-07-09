@@ -30,4 +30,20 @@ export class SpacesService {
     await this.findOne(id);
     return this.prisma.space.update({ where: { id }, data: { status: false } });
   }
+
+  async getAvailability(spaceId: number, date: string) {
+    const dayStart = new Date(`${date}T00:00:00`);
+    const dayEnd = new Date(`${date}T23:59:59`);
+
+    const reservations = await this.prisma.reservation.findMany({
+      where: {
+        spaceId,
+        status: { in: ['PENDING', 'CONFIRMED'] },
+        startTime: { gte: dayStart, lte: dayEnd },
+      },
+      select: { startTime: true, endTime: true },
+    });
+
+    return reservations;
+  }
 }
