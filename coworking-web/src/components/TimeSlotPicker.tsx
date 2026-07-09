@@ -7,7 +7,7 @@ interface Props {
   onSelect: (hour: string) => void;
 }
 
-const HOURS = Array.from({ length: 10 }, (_, i) => 8 + i);
+const HOURS = [9, 10, 11, 13, 14, 16];
 
 export function TimeSlotPicker({ date, occupied, selected, onSelect }: Props) {
   const occupiedHours = useMemo(() => {
@@ -21,7 +21,7 @@ export function TimeSlotPicker({ date, occupied, selected, onSelect }: Props) {
   }, [occupied]);
 
   return (
-    <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
       {HOURS.map((hour) => {
         const label = `${hour.toString().padStart(2, '0')}:00`;
         const isOccupied = occupiedHours.has(hour);
@@ -34,12 +34,12 @@ export function TimeSlotPicker({ date, occupied, selected, onSelect }: Props) {
             type="button"
             disabled={isOccupied}
             onClick={() => onSelect(value)}
-            className={`rounded-lg border py-2 text-sm font-medium transition ${
+            className={`h-9 rounded-md border text-sm font-extrabold transition ${
               isOccupied
-                ? 'bg-neutral-100 text-neutral-400 border-neutral-200 cursor-not-allowed line-through'
+                ? 'cursor-not-allowed border-[#292f34] bg-[#1b1f23] text-[#6f7470] line-through'
                 : isSelected
-                  ? 'bg-neutral-900 text-white border-neutral-900'
-                  : 'bg-white text-neutral-700 border-neutral-300 hover:border-neutral-400'
+                  ? 'border-[#52a37c] bg-[#52a37c] text-white'
+                  : 'border-[#2d3338] bg-[#1b1f23] text-[#f4f5f2] hover:border-[#3d4943]'
             }`}
           >
             {label}

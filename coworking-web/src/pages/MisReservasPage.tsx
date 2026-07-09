@@ -1,9 +1,27 @@
 import { useEffect, useState } from 'react';
+import { Building2, Mic, Plug, Star } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { getMyReservations, cancelReservation } from '../api/reservations';
-import { StatusBadge, getDisplayStatus } from '../components/StatusBadge';
+import { cancelReservation, getMyReservations } from '../api/reservations';
+import { getDisplayStatus, StatusBadge } from '../components/StatusBadge';
 import { ReviewModal } from '../components/ReviewModal';
-import type { Reservation } from '../types';
+import type { Reservation, Space } from '../types';
+
+const iconByType: Record<Space['type'], typeof Building2> = {
+  SALA: Building2,
+  ESCRITORIO: Plug,
+  AUDITORIO: Mic,
+};
+
+function formatDateRange(reservation: Reservation) {
+  const start = new Date(reservation.startTime);
+  const end = new Date(reservation.endTime);
+  const date = start.toLocaleDateString('es-HN', { day: 'numeric', month: 'short' });
+  const range = `${start.toLocaleTimeString('es-HN', { hour: '2-digit', minute: '2-digit' })}-${end.toLocaleTimeString('es-HN', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })}`;
+  return `${date} · ${range}`;
+}
 
 export default function MisReservasPage() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
@@ -30,51 +48,61 @@ export default function MisReservasPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Mis reservas</h1>
+    <div className="px-6 py-8 md:px-8">
+      <div className="mb-6">
+        <p className="mb-3 font-mono text-xs font-extrabold uppercase tracking-[0.24em] text-[#52a37c]">Mi actividad</p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-[#f4f5f2]">Mis reservas</h1>
+        <p className="mt-2 max-w-[520px] text-base font-medium leading-tight text-[#9fa59f]">
+          Historial y próximas reservas. Las confirmadas y ya finalizadas pueden reseñarse.
+        </p>
+      </div>
 
       {isLoading ? (
-        <p className="text-neutral-500">Cargando…</p>
+        <p className="text-[#9fa59f]">Cargando...</p>
       ) : reservations.length === 0 ? (
-        <p className="text-neutral-500">Todavía no tienes reservas.</p>
+        <p className="text-[#9fa59f]">Todavía no tienes reservas.</p>
       ) : (
         <div className="space-y-3">
           {reservations.map((reservation) => {
             const displayStatus = getDisplayStatus(reservation.status, reservation.endTime);
             const canCancel = reservation.status === 'PENDING' || reservation.status === 'CONFIRMED';
             const canReview = displayStatus === 'FINISHED';
+            const Icon = reservation.space?.type ? iconByType[reservation.space.type] : Building2;
 
             return (
               <div
                 key={reservation.id}
-                className="bg-white border border-[var(--color-border-subtle)] rounded-xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+                className="flex min-h-[74px] flex-col gap-4 rounded-xl border border-[#2b3036] bg-[#181c20] px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
               >
-                <div>
-                  <p className="font-medium">{reservation.space?.name ?? `Espacio #${reservation.spaceId}`}</p>
-                  <p className="text-sm text-neutral-500">
-                    {new Date(reservation.startTime).toLocaleString('es-HN', {
-                      dateStyle: 'medium',
-                      timeStyle: 'short',
-                    })}
-                  </p>
+                <div className="flex items-center gap-4">
+                  <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#17442d] text-[#62c891]">
+                    <Icon size={18} />
+                  </span>
+                  <div>
+                    <p className="font-extrabold text-white">{reservation.space?.name ?? `Espacio #${reservation.spaceId}`}</p>
+                    <p className="text-sm font-medium text-[#9fa59f]">{reservation.space?.location ?? 'Campus'}</p>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center justify-end gap-3">
+                  <p className="min-w-[190px] text-sm font-mono font-extrabold text-[#aab0ab]">{formatDateRange(reservation)}</p>
                   <StatusBadge status={displayStatus} />
                   {canCancel && (
                     <button
+                      type="button"
                       onClick={() => handleCancel(reservation.id)}
-                      className="text-sm font-medium text-red-600 hover:underline"
+                      className="h-8 rounded-lg border border-[#30363d] px-4 text-sm font-extrabold text-white hover:bg-[#20262a]"
                     >
                       Cancelar
                     </button>
                   )}
                   {canReview && (
                     <button
+                      type="button"
                       onClick={() => setReviewTarget(reservation)}
-                      className="text-sm font-medium text-neutral-900 hover:underline"
+                      className="flex h-8 items-center gap-2 rounded-lg bg-[#52a37c] px-4 text-sm font-extrabold text-white hover:bg-[#5cad85]"
                     >
-                      Dejar reseña
+                      <Star size={14} /> Dejar reseña
                     </button>
                   )}
                 </div>

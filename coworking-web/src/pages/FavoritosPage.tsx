@@ -14,15 +14,19 @@ export default function FavoritosPage() {
   }, []);
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Mis favoritos</h1>
+    <div className="px-6 py-8 md:px-8">
+      <div className="mb-6">
+        <p className="mb-3 font-mono text-xs font-extrabold uppercase tracking-[0.24em] text-[#52a37c]">Guardados</p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-[#f4f5f2]">Mis favoritos</h1>
+        <p className="mt-2 text-base font-medium text-[#9fa59f]">Espacios que marcaste para reservar rápido la próxima vez.</p>
+      </div>
 
       {isLoading ? (
-        <p className="text-neutral-500">Cargando…</p>
+        <p className="text-[#9fa59f]">Cargando...</p>
       ) : favorites.length === 0 ? (
-        <p className="text-neutral-500">Todavía no tienes espacios favoritos.</p>
+        <p className="text-[#9fa59f]">Todavía no tienes espacios favoritos.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid max-w-[530px] grid-cols-1 gap-5 sm:grid-cols-2">
           {favorites.map((fav) => (
             <SpaceCard key={fav.id} space={fav.space} />
           ))}

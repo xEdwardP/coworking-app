@@ -26,7 +26,7 @@ export function StarRating({ value, onChange, readOnly, size = 20 }: Props) {
         >
           <Star
             size={size}
-            className={star <= display ? 'fill-amber-400 text-amber-400' : 'text-neutral-300'}
+            className={star <= display ? 'fill-[#e6b957] text-[#e6b957]' : 'text-[#343a40]'}
           />
         </button>
       ))}
